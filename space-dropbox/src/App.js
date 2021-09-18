@@ -4,6 +4,7 @@ import { Users, BrowserStorage } from '@spacehq/sdk';
 // eslint-disable-next-line
 import { UserStorage, AddItemsResultSummary } from '@spacehq/sdk';
 
+
 async function userCreate() {
   console.log('hi')
   const users = await Users.withStorage(
@@ -22,6 +23,46 @@ const user = await users.authenticate(identity);
 console.log(identity)
 console.log(users)
 }
+
+async function createStorage() {
+const storage = new UserStorage(user);
+await storage.createFolder({ bucket: 'personal', path: 'topFolder' });
+const result = await storage.listDirectory({ bucket: 'personal', path: '' });
+}
+
+async function fileStorage() {
+  await spaceStorage.addItems({
+    bucket: 'personal',
+    files: [
+      {
+        path: 'file.txt',
+        content: '',
+      },
+      {
+        path: 'space.png',
+        content: '',
+      }
+    ],
+ });
+}
+
+async function fileShare() {
+  const storage = new UserStorage(user);
+
+// you can share privately with existing users via their public key:
+await storage.shareViaPublicKey({
+    publicKeys: [{
+      id: 'user@email.com', // or any identifier for the user
+      pk: 'user-pk-hex-or-multibase', // optional, omit if user doesn't exist yet, it would generate temp access key
+    }],
+    paths: [{
+        bucket: 'personal',
+        path: '/file/path/here'
+    }],
+});
+}
+
+
 function App() {
   return (
     <div className="App">
@@ -38,10 +79,12 @@ function App() {
         >
           Learn React
         </a>
+      
+        <button className="createToken" onClick = {userCreate}> Create User</button>
+        <button className="createToken" onClick = {createStorage}> Create Storage</button>
+        <button className="createToken" onClick = {fileStorage}> Upload file</button>
+        <button className="createToken" onClick = {fileShare}> Share File</button>
       </header>
-      <div>
-        <button className="createToken" onClick = {userCreate}> USER</button>
-      </div>
     </div>
   );
 }
