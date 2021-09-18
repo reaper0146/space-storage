@@ -1,6 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
+import { Users, BrowserStorage } from '@spacehq/sdk';
+import { UserStorage, AddItemsResultSummary } from '@spacehq/sdk';
+import { UserStorage } from '@space/sdk';
+import { Users, BrowserStorage } from '@spacehq/sdk';
 
+function userCreate() {
+  const users = await Users.withStorage(
+    new BrowserStorage(), 
+    { endpoint: 'wss://auth-dev.space.storage' }
+);
+
+}
 function App() {
   return (
     <div className="App">
@@ -18,6 +29,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <body>
+        <button className="createToken" onClick = {userCreate}></button>
+      </body>
     </div>
   );
 }
