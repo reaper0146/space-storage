@@ -1,16 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
 import { Users, BrowserStorage } from '@spacehq/sdk';
+// eslint-disable-next-line
 import { UserStorage, AddItemsResultSummary } from '@spacehq/sdk';
-import { UserStorage } from '@space/sdk';
-import { Users, BrowserStorage } from '@spacehq/sdk';
 
-function userCreate() {
+async function userCreate() {
+  console.log('hi')
   const users = await Users.withStorage(
     new BrowserStorage(), 
     { endpoint: 'wss://auth-dev.space.storage' }
+    
 );
+console.log(typeof(users.users))
+// createIdentity generate a random keypair identity
+const identity = await users.createIdentity();
 
+// the new keypair can be used to authenticate a new user
+// `users.authenticate()` generates hub API session tokens for the keypair identity.
+const user = await users.authenticate(identity);
+
+console.log(identity)
+console.log(users)
 }
 function App() {
   return (
@@ -29,9 +39,9 @@ function App() {
           Learn React
         </a>
       </header>
-      <body>
-        <button className="createToken" onClick = {userCreate}></button>
-      </body>
+      <div>
+        <button className="createToken" onClick = {userCreate}> USER</button>
+      </div>
     </div>
   );
 }
