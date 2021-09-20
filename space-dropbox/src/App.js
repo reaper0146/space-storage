@@ -4,6 +4,8 @@ import { Users, BrowserStorage } from '@spacehq/sdk';
 // eslint-disable-next-line
 import { UserStorage, AddItemsResultSummary } from '@spacehq/sdk';
 
+var tempUser
+var tempStorage
 
 async function userCreate() {
   console.log('hi')
@@ -22,14 +24,17 @@ const user = await users.authenticate(identity);
 
 console.log(identity)
 console.log(users)
+tempUser = user
 }
 
 async function createStorage() {
-const storage = new UserStorage(user);
+const storage = new UserStorage(tempUser);
 await storage.createFolder({ bucket: 'personal', path: 'topFolder' });
+console.log(storage)
 const result = await storage.listDirectory({ bucket: 'personal', path: '' });
+console.log(result)
 }
-
+/*
 async function fileStorage() {
   await spaceStorage.addItems({
     bucket: 'personal',
@@ -45,9 +50,9 @@ async function fileStorage() {
     ],
  });
 }
-
+*/
 async function fileShare() {
-  const storage = new UserStorage(user);
+  const storage = new UserStorage(tempUser);
 
 // you can share privately with existing users via their public key:
 await storage.shareViaPublicKey({
@@ -82,7 +87,6 @@ function App() {
       
         <button className="createToken" onClick = {userCreate}> Create User</button>
         <button className="createToken" onClick = {createStorage}> Create Storage</button>
-        <button className="createToken" onClick = {fileStorage}> Upload file</button>
         <button className="createToken" onClick = {fileShare}> Share File</button>
       </header>
     </div>
